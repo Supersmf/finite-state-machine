@@ -3,8 +3,8 @@ class FSM {
      * Creates new FSM instance.
      * @param config
      */
-    constructor(config) {
-        
+     constructor(config) {
+
         if(!config) throw new Error("");
         this.config = config;
         this.state = this.config.initial;
@@ -15,7 +15,7 @@ class FSM {
      * Returns active state.
      * @returns {String}
      */
-    getState() {
+     getState() {
         return this.state;
     }
 
@@ -23,21 +23,19 @@ class FSM {
      * Goes to specified state.
      * @param state
      */
-    changeState(state) {
-        if(state != "normal" && state != "busy" && 
-           state != "hungry" && state != "sleeping") throw new Error("");
-        else {
+     changeState(state) {
+        if(this.getStates().indexOf(state) != -1){
             if(this.prevState[this.prevState.length - 1] != this.state)
                 this.prevState.push(this.state);
             this.state = state;
-        }
+        }else throw new Error("")
     }
 
     /**
      * Changes state according to event transition rules.
      * @param event
      */
-    trigger(event) {
+     trigger(event) {
 
         var temp = this.config.states[this.state].transitions[event];
         this.changeState(temp);
@@ -46,7 +44,7 @@ class FSM {
     /**
      * Resets FSM state to initial.
      */
-    reset() {
+     reset() {
         this.state = this.config.initial;
     }
 
@@ -56,7 +54,7 @@ class FSM {
      * @param event
      * @returns {Array}
      */
-    getStates(event) {
+     getStates(event) {
 
         var obj = this.config.states;
         var arr = Object.getOwnPropertyNames(obj);;
@@ -69,7 +67,7 @@ class FSM {
             return newArr;
         }
         return arr;
-            
+
     }
     
     /**
@@ -77,7 +75,7 @@ class FSM {
      * Returns false if undo is not available.
      * @returns {Boolean}
      */
-    undo() {
+     undo() {
         if(this.prevState.length > 0){
             if(this.redoState.length < this.prevState.length){
                 this.redoState.push(this.state);
@@ -92,7 +90,7 @@ class FSM {
      * Returns false if redo is not available.
      * @returns {Boolean}
      */
-    redo() {
+     redo() {
         if(this.redoState.length > 0){
             this.state = this.redoState.pop();
             return true;
@@ -102,7 +100,7 @@ class FSM {
     /**
      * Clears transition history
      */
-    clearHistory() {
+     clearHistory() {
         this.prevState = [];
         this.redoState = [];
     }
